@@ -1,10 +1,8 @@
 {
-  "useTabs": false, 
-  "printWidth": 80, 
-  "tabWidth": 2, 
-  "singleQuote": true, 
-  "trailingComma": "es5",
-  "parser": "flow", 
-  "jsxBracketSameLine": false, 
-  "semi": false 
+    "singleQuote": true,
+    "jsxSingleQuote": true,
+    "arrowParens": "always",
+    "max-len": ["error", 140, 2],
+    "tabWidth": 2,
+    "useTabs": false
 }
