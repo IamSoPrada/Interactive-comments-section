@@ -9,6 +9,7 @@ function App() {
   return (
     <div className='bg-slate-100 mx-auto py-16'>
       <Container>
+        {/* first comment card */}
         <div className='bg-slate-50 relative flex flex-col-reverse sm:flex-row justify-between p-7 max-w-3xl rounded-md gap-6 shadow-lg'>
           <div className='flex sm:flex-col'>
             <button
@@ -29,7 +30,7 @@ function App() {
           </div>
           <div className='flex flex-col gap-4'>
             <div className='flex gap-4 justify-between'>
-              <div className='flex flex gap-4 items-center justify-center'>
+              <div className='flex gap-4 items-center justify-center'>
                 <div className='rounded-full w-8 h-8 bg-slate-500'>
                   <img src={avatarNicole} alt='' />
                 </div>
@@ -48,17 +49,19 @@ function App() {
             </div>
             <p className='text-gray-700'>
               Impressive! Though it seems the drag feature could be improved.
-              But overall it looks incredible. You've nailed the design and the
-              responsiveness at various breakpoints works really well.
+              But overall it looks incredible. You have nailed the design and
+              the responsiveness at various breakpoints works really well.
             </p>
           </div>
           <div />
         </div>
+        {/* first comment card */}
 
         {/* reply container with left line */}
         <div className='flex relative flex-col pl-16 gap-4 max-w-3xl '>
           <div className='absolute w-1 left-6 h-full bg-gray-300' />
 
+          {/* comment card in reply container */}
           <div className='bg-slate-50 relative flex flex-col-reverse sm:flex-row justify-between p-7 w-full rounded-md gap-6 shadow-lg'>
             <div className='flex sm:flex-col'>
               <button
@@ -98,13 +101,15 @@ function App() {
               </div>
               <p className='text-gray-700'>
                 Impressive! Though it seems the drag feature could be improved.
-                But overall it looks incredible. You've nailed the design and
+                But overall it looks incredible. You have nailed the design and
                 the responsiveness at various breakpoints works really well.
               </p>
             </div>
             <div />
           </div>
+          {/* comment card in reply container */}
 
+          {/* textarea card in reply container */}
           <div className='bg-slate-50 flex flex-col-reverse sm:flex-row justify-between p-7 max-w-3xl w-full rounded-md gap-6 shadow-lg'>
             <div className='flex w-full flex-col sm:flex-row gap-4 justify-between items-start'>
               <div className='hidden sm:block rounded-full w-14 h-10 '>
@@ -135,7 +140,9 @@ function App() {
               </div>
             </div>
           </div>
+          {/* textarea card in reply container */}
 
+          {/* edit/delete  card */}
           <div className='bg-slate-50 relative flex flex-col-reverse sm:flex-row justify-between p-7 w-full rounded-md gap-6 shadow-lg'>
             <div className='flex sm:flex-col'>
               <button
@@ -171,7 +178,7 @@ function App() {
                 <div className='flex gap-4'>
                   <button
                     type='button'
-                    className='absolute bottom-8 right-32 sm:static text-blue-500 rounded-md px-4 py-1 flex gap-2 items-center '
+                    className='absolute bottom-16 right-12 sm:static text-blue-500 rounded-md px-4 py-1 flex gap-2 items-center '
                   >
                     <img src={editIcon} className='App-logo' alt='logo' />
                     <span>Edit</span>
@@ -201,8 +208,11 @@ function App() {
             </div>
             <div />
           </div>
+          {/* edit/delete  card */}
         </div>
+        {/* reply container with left line */}
 
+        {/* textarea card */}
         <div className='bg-slate-50 flex flex-col-reverse sm:flex-row justify-between p-7 max-w-3xl w-full rounded-md gap-6 shadow-lg'>
           <div className='flex w-full flex-col sm:flex-row gap-4 justify-between items-start'>
             <div className='hidden sm:block rounded-full w-14 h-10 '>
@@ -233,6 +243,7 @@ function App() {
             </div>
           </div>
         </div>
+        {/* textarea card */}
       </Container>
     </div>
   );
