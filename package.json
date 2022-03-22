@@ -1,0 +1,43 @@
+{
+  "name": "interactive-comments-section-main",
+  "description": "![Design preview for the Interactive comments section coding challenge](./design/desktop-preview.jpg)",
+  "main": "index.js",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "concurrently \"vite\" \"npx tailwindcss -i ./src/index.css -o ./dist/output.css --watch\"",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IamSoPrada/Interactive-comments-section.git"
+  },
+  "author": "Rustem Tarasevich",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IamSoPrada/Interactive-comments-section/issues"
+  },
+  "homepage": "https://github.com/IamSoPrada/Interactive-comments-section#readme",
+  "dependencies": {
+    "concurrently": "^7.0.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^1.0.7",
+    "eslint": "^8.10.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.2",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "autoprefixer": "^10.4.4",
+    "prettier": "^2.5.1",
+    "postcss": "^8.4.12",
+    "tailwindcss": "^3.0.23",
+    "vite": "^2.8.0"
+  }
+}
