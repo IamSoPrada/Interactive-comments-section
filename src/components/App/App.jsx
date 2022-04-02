@@ -11,33 +11,31 @@ function App() {
   const { upvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
 
-  const upvotesQuantity = (id) => upvotes.find((obj) => obj.id === id);
+  const upvotesQuantity = (id) => upvotes.find((obj) => obj.commentId === id);
 
   const repliesOnComment = (id) =>
     replies.filter((reply) => reply.commentId === id);
+
+  
 
   return (
     <div className='bg-slate-100 mx-auto py-16'>
       <PageContainer>
         <TextareaCard />
         {comments &&
-          comments.map(({ nickname, date, text, commentId }) => (
+          comments.map(({ nickname, date, text, id }) => (
             <>
               <CommentCard
-                key={commentId}
-                id={commentId}
-                upvotes={
-                  upvotesQuantity(commentId)
-                    ? upvotesQuantity(commentId).upvotes
-                    : 0
-                }
+                key={id}
+                id={id}
+                upvotes={upvotesQuantity(id) ? upvotesQuantity(id).upvotes : 0}
                 nickname={nickname}
                 date={date}
                 text={text}
               />
-              {repliesOnComment(commentId) && (
+              {repliesOnComment(id) && (
                 <ReplyContainer>
-                  {repliesOnComment(commentId).map(
+                  {repliesOnComment(id).map(
                     ({ nickname, date, text, commentId, id }) => (
                       <CommentCard
                         key={id}

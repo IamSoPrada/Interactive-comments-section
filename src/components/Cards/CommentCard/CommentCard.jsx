@@ -1,4 +1,5 @@
 import React from 'react';
+import { formatDistanceToNow, getTime } from 'date-fns';
 import CardContainer from '../common components/CardContainer';
 import CardText from '../common components/CardText';
 import Author from '../common components/Author';
@@ -12,6 +13,7 @@ import MinusButton from '../common components/MinusButton';
 
 function CommentCard(props) {
   const { nickname, upvotes, date, text } = props;
+  const dateToWords = formatDistanceToNow(date, { addSuffix: true });
   return (
     <CardContainer>
       <div className='flex sm:flex-col'>
@@ -24,7 +26,7 @@ function CommentCard(props) {
           <div className='flex gap-4 items-center justify-center'>
             <Avatar avatar={avatarNicole} classes='w-8 h-8' />
             <Author>{nickname}</Author>
-            <PostDate>{date}</PostDate>
+            <PostDate>{dateToWords}</PostDate>
           </div>
           <ReplyButton />
         </div>

@@ -3,20 +3,28 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState = {
   comments: [
     {
-      commentId: 1,
+      id: 1,
       userId: 'ec59a881-f1e7-450a-a7c6-680189a762eb',
-      date: '2022-01-01 00:00:00',
+      date: 1546124305123,
       nickname: 'nicoleSuper_333',
       author: 'Nicole',
       text: 'Impressive! ',
     },
     {
-      commentId: 2,
+      id: 2,
       userId: 'ec59a891-f1e7-500a-a7c6-680189a762eb',
-      date: '2022-01-01 00:00:00',
+      date: 1647429725123,
       nickname: 'hero_123',
       author: 'Greg',
       text: 'bored af who wanna talk, dm',
+    },
+    {
+      id: 'ec59a891-f1e7-500a-a7c6-680189a762ev',
+      userId: 'ec59a891-f1e7-500a-a7c6-680189a762ev',
+      date: 1347429725123,
+      nickname: 'victim',
+      author: 'Ivan',
+      text: 'welcome my friends',
     },
   ],
 };
