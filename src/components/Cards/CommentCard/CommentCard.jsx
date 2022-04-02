@@ -10,28 +10,25 @@ import avatarNicole from '../../../../images/avatars/image-amyrobson.png';
 import PlusButton from '../common components/PlusButton';
 import MinusButton from '../common components/MinusButton';
 
-function CommentCard() {
+function CommentCard(props) {
+  const { nickname, upvotes, date, text } = props;
   return (
     <CardContainer>
       <div className='flex sm:flex-col'>
         <PlusButton />
-        <Upvotes>18</Upvotes>
+        <Upvotes>{upvotes}</Upvotes>
         <MinusButton />
       </div>
-      <div className='flex flex-col gap-4'>
+      <div className='flex flex-col gap-4 w-full'>
         <div className='flex gap-4 justify-between'>
           <div className='flex gap-4 items-center justify-center'>
             <Avatar avatar={avatarNicole} classes='w-8 h-8' />
-            <Author>nicole</Author>
-            <PostDate>1 month ago</PostDate>
+            <Author>{nickname}</Author>
+            <PostDate>{date}</PostDate>
           </div>
           <ReplyButton />
         </div>
-        <CardText>
-          Impressive! Though it seems the drag feature could be improved. But
-          overall it looks incredible. You have nailed the design and the
-          responsiveness at various breakpoints works really well.
-        </CardText>
+        <CardText>{text}</CardText>
       </div>
       <div />
     </CardContainer>
