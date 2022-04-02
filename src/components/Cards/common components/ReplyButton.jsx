@@ -8,7 +8,7 @@ function ReplyButton() {
       className='absolute bottom-10 right-8 sm:static text-purple-800 font-bold flex gap-2 items-center'
     >
       <img src={replyIcon} className='App-logo' alt='logo' />
-      <span>Reply</span>
+      <span className='text-xs md:text-lg'>Reply</span>
     </button>
   );
 }

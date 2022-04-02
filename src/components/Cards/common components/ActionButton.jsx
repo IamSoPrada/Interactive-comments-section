@@ -6,9 +6,9 @@ function ActionButton({ children, classes }) {
       type='button'
       className={`${
         classes && classes
-      } bg-purple-800 block max-w-max text-gray-50 rounded-md px-6 py-3 font-bold uppercase`}
+      } bg-purple-800 block max-w-max text-gray-50 rounded-md px-6 md:py-3 font-bold uppercase text-center`}
     >
-      <span>{children}</span>
+      <span className='text-xs md:text-lg'>{children}</span>
     </button>
   );
 }
