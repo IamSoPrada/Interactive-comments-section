@@ -16,8 +16,6 @@ function App() {
   const repliesOnComment = (id) =>
     replies.filter((reply) => reply.commentId === id);
 
-  
-
   return (
     <div className='bg-slate-100 mx-auto py-16'>
       <PageContainer>
