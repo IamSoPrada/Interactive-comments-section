@@ -36,7 +36,7 @@ function App() {
                 date={date}
                 text={text}
               />
-              {repliesOnComment(id) && (
+              {repliesOnComment(id).length > 0 && (
                 <ReplyContainer>
                   {repliesOnComment(id).map(
                     ({ nickname, date, text, commentId, id }) => (
