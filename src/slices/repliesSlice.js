@@ -46,8 +46,8 @@ const repliesSlice = createSlice({
   initialState,
 
   reducers: {
-    addReply: (state) => {
-      state.value += 1;
+    addReply: (state, { payload }) => {
+      state.replies.push(payload);
     },
     removeReply: (state) => {
       state.value -= 1;

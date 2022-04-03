@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { getTime } from 'date-fns';
+import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import { addComment } from '../../../slices/commentsSlice';
+import { addReply } from '../../../slices/repliesSlice';
+import { closeModal } from '../../../slices/modalSlice';
 import Textarea from '../common components/Textarea';
 import ActionButton from '../common components/ActionButton';
 import Avatar from '../common components/Avatar';
 import avatarNicole from '../../../../images/avatars/image-amyrobson.png';
 import CardContainer from '../common components/CardContainer';
 
-function TextareaCard() {
+function TextareaCard({ reply }) {
   const dispatch = useDispatch();
+  const commentId = useSelector(({ modalInfo }) => modalInfo.commentId);
 
   const [inputText, setInputText] = useState('');
 
@@ -19,7 +21,7 @@ function TextareaCard() {
     setInputText(value);
   };
 
-  const onSubmitForm = (e) => {
+  const onSubmitComment = (e) => {
     e.preventDefault();
     const payload = {
       id: uuidv4(),
@@ -29,8 +31,23 @@ function TextareaCard() {
       text: inputText.trim(),
       date: new Date().getTime(),
     };
-    console.log(payload);
     dispatch(addComment(payload));
+    setInputText('');
+  };
+
+  const onSubmitReply = (e) => {
+    e.preventDefault();
+    const payload = {
+      id: uuidv4(),
+      author: 'nick',
+      commentId,
+      userId: uuidv4(),
+      nickname: 'Nicole_LOL',
+      text: inputText.trim(),
+      date: new Date().getTime(),
+    };
+    dispatch(addReply(payload));
+    dispatch(closeModal());
     setInputText('');
   };
 
@@ -43,12 +60,17 @@ function TextareaCard() {
           alt=''
         />
         <Textarea onChange={handleChangeInput} value={inputText} />
-        <ActionButton onClick={onSubmitForm} classes='hidden sm:block'>
+        <ActionButton
+          onClick={reply ? onSubmitReply : onSubmitComment}
+          classes='hidden sm:block'
+        >
           send
         </ActionButton>
         <div className='flex w-full gap-4 justify-between sm:hidden'>
           <Avatar avatar={avatarNicole} classes='w-8 h-8' alt='' />
-          <ActionButton onClick={onSubmitForm}>Reply</ActionButton>
+          <ActionButton onClick={reply ? onSubmitReply : onSubmitComment}>
+            Reply
+          </ActionButton>
         </div>
       </div>
     </CardContainer>

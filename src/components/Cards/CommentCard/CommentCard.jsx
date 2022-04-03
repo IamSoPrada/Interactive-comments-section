@@ -1,5 +1,5 @@
 import React from 'react';
-import { formatDistanceToNow, getTime } from 'date-fns';
+import { formatDistanceToNow } from 'date-fns';
 import CardContainer from '../common components/CardContainer';
 import CardText from '../common components/CardText';
 import Author from '../common components/Author';
@@ -12,7 +12,7 @@ import PlusButton from '../common components/PlusButton';
 import MinusButton from '../common components/MinusButton';
 
 function CommentCard(props) {
-  const { nickname, upvotes, date, text } = props;
+  const { nickname, upvotes, date, text, id } = props;
   const dateToWords = formatDistanceToNow(date, { addSuffix: true });
   return (
     <CardContainer>
@@ -28,7 +28,7 @@ function CommentCard(props) {
             <Author>{nickname}</Author>
             <PostDate>{dateToWords}</PostDate>
           </div>
-          <ReplyButton />
+          <ReplyButton commentId={id} />
         </div>
         <CardText>{text}</CardText>
       </div>

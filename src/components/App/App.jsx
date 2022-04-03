@@ -6,7 +6,7 @@ import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
 import CommentCard from '../Cards/CommentCard';
 import TextareaCard from '../Cards/TextareaCard';
-import EditableCommentCard from '../Cards/EditableCommentCard';
+// import EditableCommentCard from '../Cards/EditableCommentCard';
 
 function App() {
   const { comments } = useSelector(({ commentsInfo }) => commentsInfo);
@@ -20,9 +20,9 @@ function App() {
 
   return (
     <div className='relative bg-slate-100 mx-auto py-16'>
-      {/*       <ModalBackground>
-        <TextareaCard />
-      </ModalBackground> */}
+      <ModalBackground>
+        <TextareaCard reply />
+      </ModalBackground>
       <PageContainer>
         <TextareaCard />
         {comments &&
