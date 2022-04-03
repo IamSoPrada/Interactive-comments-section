@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { Fragment } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { useSelector } from 'react-redux';
+import ModalBackground from '../Cards/common components/ModalBackground';
 import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
 import CommentCard from '../Cards/CommentCard';
@@ -17,12 +19,15 @@ function App() {
     replies.filter((reply) => reply.commentId === id);
 
   return (
-    <div className='bg-slate-100 mx-auto py-16'>
+    <div className='relative bg-slate-100 mx-auto py-16'>
+      {/*       <ModalBackground>
+        <TextareaCard />
+      </ModalBackground> */}
       <PageContainer>
         <TextareaCard />
         {comments &&
           comments.map(({ nickname, date, text, id }) => (
-            <>
+            <Fragment key={uuidv4()}>
               <CommentCard
                 key={id}
                 id={id}
@@ -52,7 +57,7 @@ function App() {
                   {/* <EditableCommentCard /> */}
                 </ReplyContainer>
               )}
-            </>
+            </Fragment>
           ))}
       </PageContainer>
     </div>

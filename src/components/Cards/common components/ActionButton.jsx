@@ -1,8 +1,9 @@
 import React from 'react';
 
-function ActionButton({ children, classes }) {
+function ActionButton({ children, classes, onClick }) {
   return (
     <button
+      onClick={onClick}
       type='button'
       className={`${
         classes && classes
