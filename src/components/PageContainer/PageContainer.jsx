@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Container({ children }) {
+function PageContainer({ children }) {
   return (
     <div className='container flex flex-col items-center px-4 min-h-screen gap-4'>
       {children}
@@ -8,4 +8,4 @@ function Container({ children }) {
   );
 }
 
-export default Container;
+export default PageContainer;
