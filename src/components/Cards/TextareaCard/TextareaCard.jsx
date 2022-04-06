@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
+import AuthContext from '../../../contexts/authContext.jsx';
+import { addCommentToDB } from '../../../supabase/comments';
 import { addComment } from '../../../slices/commentsSlice';
 import { addReply } from '../../../slices/repliesSlice';
 import { closeModal } from '../../../slices/modalSlice';
@@ -12,6 +14,7 @@ import CardContainer from '../common components/CardContainer';
 
 function TextareaCard({ reply }) {
   const dispatch = useDispatch();
+  const { user_id, username } = useContext(AuthContext);
   const commentId = useSelector(({ modalInfo }) => modalInfo.commentId);
 
   const [inputText, setInputText] = useState('');
@@ -21,17 +24,18 @@ function TextareaCard({ reply }) {
     setInputText(value);
   };
 
-  const onSubmitComment = (e) => {
+  const onSubmitComment = async (e) => {
     e.preventDefault();
     const payload = {
       id: uuidv4(),
-      author: 'nick',
-      userId: uuidv4(),
-      nickname: 'Nicole_LOL',
+      author: username,
+      user_id,
+      nickname: username,
       text: inputText.trim(),
       date: new Date().getTime(),
     };
-    dispatch(addComment(payload));
+    const data = await addCommentToDB(payload);
+    dispatch(addComment(data));
     setInputText('');
   };
 

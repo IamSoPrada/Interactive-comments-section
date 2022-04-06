@@ -3,11 +3,11 @@ import { useDispatch } from 'react-redux';
 import { openModal } from '../../../slices/modalSlice';
 import replyIcon from '../../../../images/icon-reply.svg';
 
-function ReplyButton({ commentId }) {
+function ReplyButton({ comment_id }) {
   const dispatch = useDispatch();
 
   const handleOpenModal = ({ type, id = null }) => {
-    dispatch(openModal({ type, id: commentId }));
+    dispatch(openModal({ type, id: comment_id }));
   };
 
   return (

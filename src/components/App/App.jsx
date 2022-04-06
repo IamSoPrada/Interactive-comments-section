@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import AuthContext from '../../contexts/authContext.jsx';
-import { supabase } from '../../supabaseClient';
+import { supabase } from '../../supabase/supabaseClient';
 import AuthorizationPage from '../../pages/AuthorizationPage';
 import NotFoundPage from '../../pages/NotFoundPage';
 import Comments from '../Comments';

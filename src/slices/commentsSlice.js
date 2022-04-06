@@ -1,32 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { supabase } from '../supabase/supabaseClient';
+
+export const getComments = createAsyncThunk(
+  'commentsInfo/setInitialState',
+  async () => {
+    try {
+      const { data, error } = await supabase
+        .from('comments')
+        .select()
+        .order('date', { ascending: false });
+      return data;
+    } catch ({ message }) {
+      throw new Error('Упс.. Что-то пошло не так.');
+    }
+  }
+);
 
 const initialState = {
-  comments: [
-    {
-      id: 'ec59a881-f1e7-450a-a7c6-680189a762ec',
-      userId: 'ec59a881-f1e7-450a-a7c6-680189a762ec',
-      date: 1546124305123,
-      nickname: 'nicoleSuper_333',
-      author: 'Nicole',
-      text: 'Impressive! ',
-    },
-    {
-      id: 'ec59a891-f1e7-500a-a7c6-680189a762ez',
-      userId: 'ec59a891-f1e7-500a-a7c6-680189a762eb',
-      date: 1647429725123,
-      nickname: 'hero_123',
-      author: 'Greg',
-      text: 'bored af who wanna talk, dm',
-    },
-    {
-      id: 'ec59a891-f1e7-500a-a7c6-680189a762ev',
-      userId: 'ec59a891-f1e7-500a-a7c6-680189a762ev',
-      date: 1347429725123,
-      nickname: 'victim',
-      author: 'Ivan',
-      text: 'welcome my friends',
-    },
-  ],
+  status: 'idle',
+  error: null,
+  comments: [],
 };
 
 const commentsSlice = createSlice({
@@ -43,6 +36,22 @@ const commentsSlice = createSlice({
     editComment: (state, action) => {
       state.value += action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getComments.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(getComments.fulfilled, (state, { payload }) => {
+        state.comments = payload;
+        state.status = 'success';
+        state.error = null;
+      })
+      .addCase(getComments.rejected, (state, { error }) => {
+        state.status = 'error';
+        state.error = error.message;
+      });
   },
 });
 

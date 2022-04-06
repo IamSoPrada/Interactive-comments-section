@@ -13,7 +13,7 @@ import MinusButton from '../common components/MinusButton';
 
 function CommentCard(props) {
   const { nickname, upvotes, date, text, id } = props;
-  const dateToWords = formatDistanceToNow(date, { addSuffix: true });
+  const dateToWords = formatDistanceToNow(+date, { addSuffix: true });
   return (
     <CardContainer>
       <div className='flex sm:flex-col'>
@@ -28,7 +28,7 @@ function CommentCard(props) {
             <Author>{nickname}</Author>
             <PostDate>{dateToWords}</PostDate>
           </div>
-          <ReplyButton commentId={id} />
+          <ReplyButton comment_id={id} />
         </div>
         <CardText>{text}</CardText>
       </div>

@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { supabase } from '../supabaseClient.js';
+import { supabase } from '../supabase/supabaseClient.js';
 import AuthContext from '../contexts/authContext.jsx';
 
 function AuthProvider(props) {
@@ -7,12 +7,14 @@ function AuthProvider(props) {
 
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [username, setUsername] = useState(localStorage.getItem('username'));
+  const [user_id, setUserId] = useState(localStorage.getItem('user_id'));
   const [isAuthenticated, setIsAuthenticated] = useState(
     localStorage.getItem('isAuthenticated')
   );
 
   const signOut = () => {
     setIsAuthenticated(null);
+    setUserId(null);
     setToken(null);
     setUsername(null);
     localStorage.clear();
@@ -23,13 +25,16 @@ function AuthProvider(props) {
     if (!session) return;
     localStorage.setItem('token', session.access_token);
     localStorage.setItem('username', session.user.email);
+    localStorage.setItem('user_id', session.user.id);
     localStorage.setItem('isAuthenticated', true);
     setIsAuthenticated(true);
     setToken(session.access_token);
     setUsername(session.user.email);
+    setUserId(session.user.id);
   };
 
   const value = {
+    user_id,
     username,
     token,
     isAuthenticated,
