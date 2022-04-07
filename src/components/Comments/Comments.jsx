@@ -11,13 +11,13 @@ import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
 import CommentCard from '../Cards/CommentCard';
 import TextareaCard from '../Cards/TextareaCard';
-// import EditableCommentCard from '../Cards/EditableCommentCard';
+import EditableCommentCard from '../Cards/EditableCommentCard';
 
 function Comments() {
   let supabaseCommentsSubscription = null;
   let supabaseRepliesSubscription = null;
   const dispatch = useDispatch();
-  const { user_id } = useContext(AuthContext);
+  const currentUserId = useContext(AuthContext).user_id;
   const { comments, status } = useSelector(({ commentsInfo }) => commentsInfo);
   const { upvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
@@ -54,7 +54,7 @@ function Comments() {
       .on('*', (payload) => {
         switch (payload.eventType) {
           case 'INSERT':
-            if (user_id !== payload.new.user_id) {
+            if (currentUserId !== payload.new.user_id) {
               return dispatch(addComment(payload.new));
             }
             return null;
@@ -68,7 +68,7 @@ function Comments() {
       .on('*', (payload) => {
         switch (payload.eventType) {
           case 'INSERT':
-            if (user_id !== payload.new.user_id) {
+            if (currentUserId !== payload.new.user_id) {
               return dispatch(addReply(payload.new));
             }
             return null;
@@ -91,7 +91,7 @@ function Comments() {
       <PageContainer>
         <TextareaCard />
         {comments &&
-          comments.map(({ nickname, date, text, id }) => (
+          comments.map(({ nickname, date, text, id, user_id }) => (
             <Fragment key={uuidv4()}>
               <CommentCard
                 key={id}
@@ -100,21 +100,28 @@ function Comments() {
                 nickname={nickname}
                 date={date}
                 text={text}
+                userId={user_id}
               />
+
               {repliesOnComment(id).length > 0 && (
                 <ReplyContainer>
                   {repliesOnComment(id).map(
-                    ({ nickname, date, text, comment_id, id }) => (
-                      <CommentCard
-                        key={id}
-                        id={comment_id}
-                        upvotes={
-                          upvotesQuantity(id) ? upvotesQuantity(id).upvotes : 0
-                        }
-                        nickname={nickname}
-                        date={date}
-                        text={text}
-                      />
+                    ({ nickname, date, text, comment_id, id, user_id }) => (
+                      <Fragment key={uuidv4()}>
+                        <CommentCard
+                          key={id}
+                          id={comment_id}
+                          upvotes={
+                            upvotesQuantity(id)
+                              ? upvotesQuantity(id).upvotes
+                              : 0
+                          }
+                          nickname={nickname}
+                          date={date}
+                          userId={user_id}
+                          text={text}
+                        />
+                      </Fragment>
                     )
                   )}
 

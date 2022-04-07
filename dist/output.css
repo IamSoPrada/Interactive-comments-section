@@ -548,6 +548,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   z-index: 10;
 }
 
+.z-0 {
+  z-index: 0;
+}
+
 .z-20 {
   z-index: 20;
 }
@@ -575,10 +579,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .flex {
   display: flex;
-}
-
-.table {
-  display: table;
 }
 
 .hidden {
