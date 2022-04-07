@@ -7,7 +7,7 @@ function ActionButton({ children, classes, onClick }) {
       type='button'
       className={`${
         classes && classes
-      } bg-purple-800 block max-w-max text-gray-50 rounded-md px-6 md:py-3 font-bold uppercase text-center`}
+      } bg-purple-800 block max-w-max text-gray-50 rounded-full px-6 md:px-3 md:py-3 font-bold uppercase text-center`}
     >
       <span className='text-xs md:text-lg'>{children}</span>
     </button>

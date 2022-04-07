@@ -5,13 +5,12 @@ function PlusButton() {
   return (
     <button
       type='button'
-      className='px-4 py-1 text-purple-400 text-xl font-bold bg-slate-100 transition ease-in-out hover:bg-slate-300 rounded-l-lg sm:rounded-bl-none sm:rounded-tr-lg  cursor-pointer text-center'
+      className='w-10 h-10 text-purple-400 text-xl font-bold bg-slate-100 transition ease-in-out hover:bg-slate-300 rounded-full cursor-pointer text-center'
     >
       <svg
-        className='w-6 h-6'
+        className='w-8 h-8 relative left-2 top-1'
         fill='red'
         stroke='none'
-        viewBox='0 0 24 24'
         xmlns='http://www.w3.org/2000/svg'
       >
         <path d='M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z' />
