@@ -1,8 +1,9 @@
 import React, { useState, useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, batch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import AuthContext from '../../../contexts/authContext.jsx';
 import { addCommentToDB } from '../../../supabase/comments';
+import { addReplyToDB } from '../../../supabase/replies';
 import { addComment } from '../../../slices/commentsSlice';
 import { addReply } from '../../../slices/repliesSlice';
 import { closeModal } from '../../../slices/modalSlice';
@@ -15,7 +16,7 @@ import CardContainer from '../common components/CardContainer';
 function TextareaCard({ reply }) {
   const dispatch = useDispatch();
   const { user_id, username } = useContext(AuthContext);
-  const commentId = useSelector(({ modalInfo }) => modalInfo.commentId);
+  const comment_id = useSelector(({ modalInfo }) => modalInfo.comment_id);
 
   const [inputText, setInputText] = useState('');
 
@@ -32,27 +33,28 @@ function TextareaCard({ reply }) {
       user_id,
       nickname: username,
       text: inputText.trim(),
-      date: new Date().getTime(),
     };
     const data = await addCommentToDB(payload);
     dispatch(addComment(data));
     setInputText('');
   };
 
-  const onSubmitReply = (e) => {
+  const onSubmitReply = async (e) => {
     e.preventDefault();
     const payload = {
       id: uuidv4(),
-      author: 'nick',
-      commentId,
-      userId: uuidv4(),
-      nickname: 'Nicole_LOL',
+      author: username,
+      comment_id,
+      user_id,
+      nickname: username,
       text: inputText.trim(),
-      date: new Date().getTime(),
     };
-    dispatch(addReply(payload));
-    dispatch(closeModal());
-    setInputText('');
+    const data = await addReplyToDB(payload);
+    batch(() => {
+      dispatch(addReply(data));
+      setInputText('');
+      dispatch(closeModal());
+    });
   };
 
   return (

@@ -1,10 +1,11 @@
 import React, { Fragment, useEffect, useContext } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector, useDispatch, batch } from 'react-redux';
 import { toast } from 'react-toastify';
 import AuthContext from '../../contexts/authContext.jsx';
 import { supabase } from '../../supabase/supabaseClient';
 import { getComments, addComment } from '../../slices/commentsSlice';
+import { getReplies, addReply } from '../../slices/repliesSlice';
 import ModalBackground from '../Modals/ModalBackground';
 import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
@@ -13,8 +14,10 @@ import TextareaCard from '../Cards/TextareaCard';
 // import EditableCommentCard from '../Cards/EditableCommentCard';
 
 function Comments() {
+  let supabaseCommentsSubscription = null;
+  let supabaseRepliesSubscription = null;
   const dispatch = useDispatch();
-  const { user_id, token, username } = useContext(AuthContext);
+  const { user_id } = useContext(AuthContext);
   const { comments, status } = useSelector(({ commentsInfo }) => commentsInfo);
   const { upvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
@@ -27,7 +30,10 @@ function Comments() {
   const handleStatus = (status) => {
     switch (status) {
       case 'idle':
-        return dispatch(getComments());
+        return batch(() => {
+          dispatch(getComments());
+          dispatch(getReplies());
+        });
       case 'loading':
         return toast.info('loading');
       case 'success':
@@ -43,7 +49,7 @@ function Comments() {
 
   useEffect(() => {
     handleStatus(status);
-    supabase
+    supabaseCommentsSubscription = supabase
       .from('comments')
       .on('*', (payload) => {
         switch (payload.eventType) {
@@ -57,10 +63,25 @@ function Comments() {
         }
       })
       .subscribe();
+    supabaseRepliesSubscription = supabase
+      .from('replies')
+      .on('*', (payload) => {
+        switch (payload.eventType) {
+          case 'INSERT':
+            if (user_id !== payload.new.user_id) {
+              return dispatch(addReply(payload.new));
+            }
+            return null;
+          default:
+            return null;
+        }
+      })
+      .subscribe();
     return () => {
-      supabase.removeSubscription();
+      supabase.removeSubscription(supabaseCommentsSubscription);
+      supabase.removeSubscription(supabaseRepliesSubscription);
     };
-  }, [status, comments]);
+  }, [status]);
 
   return (
     <div className='relative bg-slate-100 mx-auto py-4'>

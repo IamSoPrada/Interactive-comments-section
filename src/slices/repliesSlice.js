@@ -1,44 +1,25 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { supabase } from '../supabase/supabaseClient';
+
+export const getReplies = createAsyncThunk(
+  'repliesInfo/setInitialState',
+  async () => {
+    try {
+      const { data, error } = await supabase
+        .from('replies')
+        .select()
+        .order('date', { ascending: false });
+      return data;
+    } catch ({ message }) {
+      throw new Error('Упс.. Что-то пошло не так.');
+    }
+  }
+);
 
 const initialState = {
-  replies: [
-    {
-      id: '88c9b542-101e-41d3-9d58-3b1a89f8fe11',
-      comment_id: 'ec59a881-f1e7-450a-a7c6-680189a762ec',
-      user_id: '64885231-1837-4dbb-9ee6-c8a42f71878b',
-      date: 1647429725123,
-      nickname: 'Peter_Hater3',
-      author: 'Peter',
-      text: 'Disagree to that bs',
-    },
-    {
-      id: '4e9f5fd5-e017-452c-9516-8c9144d9f7e8',
-      comment_id: 'ec59a891-f1e7-500a-a7c6-680189a762ez',
-      user_id: '64885231-1837-4dbb-9ee6-c8a42f71878b',
-      date: 1637129725123,
-      nickname: 'John_Potter',
-      author: 'John',
-      text: 'Duck you',
-    },
-    {
-      id: 'd52edd44-b7eb-4092-a9f9-7ea5e8c706e2',
-      comment_id: 'ec59a891-f1e7-500a-a7c6-680189a762ez',
-      user_id: '64885231-1837-4dbb-9ee6-c8a42f71878b',
-      date: 1247529725123,
-      nickname: 'harryClark',
-      author: 'Harry',
-      text: 'Nice post',
-    },
-    {
-      id: 'b7e6b737-446c-4104-8e75-9867845c494d',
-      comment_id: 'ec59a891-f1e7-500a-a7c6-680189a762ez',
-      user_id: '64885231-1837-4dbb-9ee6-c8a42f71878b',
-      date: 1642729725123,
-      nickname: 'Smith_Will',
-      author: 'Smith',
-      text: 'I love play chess',
-    },
-  ],
+  status: 'idle',
+  error: null,
+  replies: [],
 };
 
 const repliesSlice = createSlice({
@@ -55,6 +36,22 @@ const repliesSlice = createSlice({
     editReply: (state, action) => {
       state.value += action.payload;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getReplies.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(getReplies.fulfilled, (state, { payload }) => {
+        state.replies = payload;
+        state.status = 'success';
+        state.error = null;
+      })
+      .addCase(getReplies.rejected, (state, { error }) => {
+        state.status = 'error';
+        state.error = error.message;
+      });
   },
 });
 
