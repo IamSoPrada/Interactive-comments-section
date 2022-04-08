@@ -12,17 +12,17 @@ function AuthProvider(props) {
     localStorage.getItem('isAuthenticated')
   );
 
-  const signOut = () => {
+  const signOut = async () => {
+    const { error } = await supabase.auth.signOut();
     setIsAuthenticated(null);
     setUserId(null);
     setToken(null);
     setUsername(null);
     localStorage.clear();
-    supabase.auth.signOut();
   };
 
   const setCredentials = (session) => {
-    if (!session) return signOut();
+    if (!session) return localStorage.clear();
     localStorage.setItem('token', session.access_token);
     localStorage.setItem('username', session.user.email);
     localStorage.setItem('user_id', session.user.id);

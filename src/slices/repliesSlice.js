@@ -8,7 +8,7 @@ export const getReplies = createAsyncThunk(
       const { data, error } = await supabase
         .from('replies')
         .select()
-        .order('date', { ascending: false });
+        
       return data;
     } catch ({ message }) {
       throw new Error('Упс.. Что-то пошло не так.');

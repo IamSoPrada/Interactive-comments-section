@@ -14,7 +14,7 @@ function App() {
     supabase.auth.onAuthStateChange((_event, session) => {
       setCredentials(session);
     });
-  }, [token]);
+  }, []);
   if (!token) return <AuthorizationPage />;
   return (
     <BrowserRouter>
