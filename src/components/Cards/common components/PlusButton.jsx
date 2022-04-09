@@ -1,9 +1,10 @@
 import React from 'react';
-// import plusIcon from '../../../../images/icon-plus.svg';
 
-function PlusButton() {
+
+function PlusButton({ onClick }) {
   return (
     <button
+      onClick={onClick}
       type='button'
       className='w-10 h-10 text-purple-400 text-xl font-bold bg-slate-100 transition ease-in-out hover:bg-slate-300 rounded-full cursor-pointer text-center'
     >

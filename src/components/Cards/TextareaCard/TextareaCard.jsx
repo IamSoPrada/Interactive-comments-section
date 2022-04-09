@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import AuthContext from '../../../contexts/authContext.jsx';
 import IconButton from '../common components/IconButton';
 import { addCommentToDB } from '../../../supabase/comments';
+import { addCommentUpvoteRowToDB } from '../../../supabase/upvotes';
 import { addReplyToDB } from '../../../supabase/replies';
 import { addComment } from '../../../slices/commentsSlice';
 import { addReply } from '../../../slices/repliesSlice';
@@ -40,6 +41,7 @@ function TextareaCard({ reply }) {
       text: inputText.trim(),
     };
     const data = await addCommentToDB(payload);
+    // await addCommentUpvoteRowToDB(payload);
     dispatch(addComment(data));
     setInputText('');
   };
@@ -55,6 +57,7 @@ function TextareaCard({ reply }) {
       text: inputText.trim(),
     };
     const data = await addReplyToDB(payload);
+
     batch(() => {
       dispatch(addReply(data));
       setInputText('');
@@ -63,7 +66,7 @@ function TextareaCard({ reply }) {
   };
 
   return (
-    <CardContainer classes='bg-slate-50'>
+    <CardContainer classes='z-60 bg-slate-50'>
       <div className='flex w-full flex-col gap-4 justify-between items-start'>
         <div className='flex w-full flex-row gap-4 justify-between items-start'>
           <Avatar

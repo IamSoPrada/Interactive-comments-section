@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 export const modalSlice = createSlice({
   name: 'modal',

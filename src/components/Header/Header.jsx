@@ -10,6 +10,9 @@ function Header() {
   return (
     <header className='flex w-full bg-purple-800'>
       <div className='flex items-center justify-between w-full px-4 h-16'>
+        <Link className='px-6' to='/'>
+          <img className='w-6 h-6 w-full' src={BellIcon} alt='' />
+        </Link>
         <div className='flex gap-4 align-center'>
           <Link className='' to='/'>
             <svg
@@ -25,9 +28,6 @@ function Header() {
                 d='M13 10V3L4 14h7v7l9-11h-7z'
               />
             </svg>
-          </Link>
-          <Link className='' to='/'>
-            <img className='w-6 h-6 w-full' src={BellIcon} alt='' />
           </Link>
         </div>
 

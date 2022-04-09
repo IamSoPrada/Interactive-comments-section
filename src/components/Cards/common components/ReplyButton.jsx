@@ -14,7 +14,7 @@ function ReplyButton({ comment_id }) {
     <button
       onClick={handleOpenModal}
       type='button'
-      className='absolute bottom-8 right-8 sm:static text-purple-800 font-bold flex gap-2 items-center z-10'
+      className='absolute bottom-8 md:relative md:bottom-0 right-4 text-purple-800 font-bold flex gap-2 items-center z-10'
     >
       <img src={replyIcon} className='App-logo' alt='logo' />
       <span className='text-xs md:text-lg'>Reply</span>

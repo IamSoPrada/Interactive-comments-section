@@ -1,28 +1,22 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { supabase } from '../supabase/supabaseClient';
+
+export const getUpvotes = createAsyncThunk(
+  'upvotesInfo/setInitialState',
+  async () => {
+    try {
+      const { data, error } = await supabase.from('upvotes').select();
+      return data;
+    } catch ({ message }) {
+      throw new Error('Упс.. Что-то пошло не так.');
+    }
+  }
+);
 
 const initialState = {
-  upvotes: [
-    {
-      commentId: 1,
-      userId: 'ec59a881-f1e7-450a-a7c6-680189a762eb',
-      upvotes: 18,
-    },
-    {
-      commentId: 2,
-      userId: 'ec59a881-f1e7-450a-a7c6-680189a762eb',
-      upvotes: 39,
-    },
-    {
-      commentId: 'd52edd44-b7eb-4092-a9f9-7ea5e8c706e2',
-      userId: 'ec59a881-f1e7-450a-a7c6-680189a762eb',
-      upvotes: 3,
-    },
-    {
-      commentId: 'ec59a891-f1e7-500a-a7c6-680189a762ev',
-      userId: 'ec59a881-f1e7-450a-a7c6-680189a762eb',
-      upvotes: 566,
-    },
-  ],
+  status: 'idle',
+  error: null,
+  upvotes: [],
 };
 
 const upvotesSlice = createSlice({
@@ -30,12 +24,28 @@ const upvotesSlice = createSlice({
   initialState,
 
   reducers: {
-    addUpvote: (state) => {
-      state.value += 1;
+    addUpvote: (state, { payload }) => {
+      state.upvotes.push(payload);
     },
     removeUpvote: (state) => {
       state.value -= 1;
     },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getUpvotes.pending, (state) => {
+        state.status = 'loading';
+        state.error = null;
+      })
+      .addCase(getUpvotes.fulfilled, (state, { payload }) => {
+        state.upvotes = payload;
+        state.status = 'success';
+        state.error = null;
+      })
+      .addCase(getUpvotes.rejected, (state, { error }) => {
+        state.status = 'error';
+        state.error = error.message;
+      });
   },
 });
 

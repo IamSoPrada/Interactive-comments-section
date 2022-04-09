@@ -6,6 +6,7 @@ import AuthContext from '../../contexts/authContext.jsx';
 import { supabase } from '../../supabase/supabaseClient';
 import { getComments, addComment } from '../../slices/commentsSlice';
 import { getReplies, addReply } from '../../slices/repliesSlice';
+import { addUpvote, getUpvotes } from '../../slices/upvotesSlice';
 import ModalBackground from '../Modals/ModalBackground';
 import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
@@ -16,13 +17,17 @@ import EditableCommentCard from '../Cards/EditableCommentCard';
 function Comments() {
   let supabaseCommentsSubscription = null;
   let supabaseRepliesSubscription = null;
+  let supabaseUpvotesSubscription = null;
   const dispatch = useDispatch();
   const currentUserId = useContext(AuthContext).user_id;
   const { comments, status } = useSelector(({ commentsInfo }) => commentsInfo);
   const { upvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
 
-  const upvotesQuantity = (id) => upvotes.find((obj) => obj.comment_id === id);
+  function upvotesQuantity(id) {
+    const filteredById = upvotes.filter((obj) => obj.comment_id === id);
+    return filteredById.length;
+  }
 
   const repliesOnComment = (id) =>
     replies.filter((reply) => reply.comment_id === id);
@@ -33,6 +38,7 @@ function Comments() {
         return batch(() => {
           dispatch(getComments());
           dispatch(getReplies());
+          dispatch(getUpvotes());
         });
       case 'loading':
         return toast.info('loading');
@@ -77,6 +83,20 @@ function Comments() {
         }
       })
       .subscribe();
+    supabaseUpvotesSubscription = supabase
+      .from('upvotes')
+      .on('*', (payload) => {
+        switch (payload.eventType) {
+          case 'INSERT':
+            if (currentUserId !== payload.new.user_id) {
+              return dispatch(addUpvote(payload.new));
+            }
+            return null;
+          default:
+            return null;
+        }
+      })
+      .subscribe();
     return () => {
       supabase.removeSubscription(supabaseCommentsSubscription);
       supabase.removeSubscription(supabaseRepliesSubscription);
@@ -96,7 +116,7 @@ function Comments() {
               <CommentCard
                 key={id}
                 id={id}
-                upvotes={upvotesQuantity(id) ? upvotesQuantity(id).upvotes : 0}
+                upvotes={upvotesQuantity(id) ? upvotesQuantity(id) : 0}
                 nickname={nickname}
                 date={date}
                 text={text}
@@ -105,25 +125,24 @@ function Comments() {
 
               {repliesOnComment(id).length > 0 && (
                 <ReplyContainer>
-                  {repliesOnComment(id).map(
-                    ({ nickname, date, text, comment_id, id, user_id }) => (
-                      <Fragment key={uuidv4()}>
-                        <CommentCard
-                          key={id}
-                          id={comment_id}
-                          upvotes={
-                            upvotesQuantity(id)
-                              ? upvotesQuantity(id).upvotes
-                              : 0
-                          }
-                          nickname={nickname}
-                          date={date}
-                          userId={user_id}
-                          text={text}
-                        />
-                      </Fragment>
-                    )
-                  )}
+                  {repliesOnComment(id).map((reply) => (
+                    <Fragment key={uuidv4()}>
+                      <CommentCard
+                        key={reply.id}
+                        id={reply.id}
+                        comment_id={reply.comment_id}
+                        upvotes={
+                          upvotesQuantity(reply.id)
+                            ? upvotesQuantity(reply.id)
+                            : 0
+                        }
+                        nickname={nickname}
+                        date={reply.date}
+                        userId={reply.user_id}
+                        text={reply.text}
+                      />
+                    </Fragment>
+                  ))}
 
                   {/* <TextareaCard /> */}
                   {/* <EditableCommentCard /> */}

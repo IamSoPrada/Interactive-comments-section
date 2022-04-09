@@ -30,11 +30,15 @@ const commentsSlice = createSlice({
     addComment: (state, { payload }) => {
       state.comments.unshift(payload);
     },
-    removeComment: (state) => {
-      state.value -= 1;
+    removeComment: (state, { payload }) => {
+      state.comments = state.comments.filter(
+        (comment) => comment.id !== payload.id
+      );
     },
-    editComment: (state, action) => {
-      state.value += action.payload;
+    editComment: (state, { payload }) => {
+      state.comments = state.comments.map((comment) =>
+        comment.id === payload.id ? payload : comment
+      );
     },
   },
   extraReducers: (builder) => {
