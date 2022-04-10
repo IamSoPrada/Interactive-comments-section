@@ -1,10 +1,17 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 function Author({ children }) {
   return (
-    <h3 className='w-fit text-ellipsis overflow-hidden text-xs font-bold md:text-lg text-gray-800 '>
-      {children}
-    </h3>
+    <div className='flex items-center '>
+
+      <Link
+        to='profile'
+        className='w-fit text-ellipsis overflow-hidden text-xs font-bold md:text-lg text-gray-800 '
+      >
+        {children}
+      </Link>
+    </div>
   );
 }
 

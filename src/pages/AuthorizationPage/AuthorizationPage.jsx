@@ -27,7 +27,7 @@ export default function AuthorizationPage() {
       <div className='max-w-5xl mx-auto'>
         <div className='flex flex-col items-center'>
           <div>
-            <img className='w-full' src={Logo} alt='' />
+            <img className='min-w-2xl w-full' src={Logo} alt='' />
           </div>
           {loading ? (
             'Проверьте ваш email.'
