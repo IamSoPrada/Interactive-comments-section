@@ -28,6 +28,7 @@ function TextareaCard({ reply }) {
 
   const handleChangeInput = (e) => {
     const { value } = e.target;
+
     setInputText(value);
   };
 
@@ -41,9 +42,8 @@ function TextareaCard({ reply }) {
       text: inputText.trim(),
     };
     const data = await addCommentToDB(payload);
-    // await addCommentUpvoteRowToDB(payload);
-    dispatch(addComment(data));
     setInputText('');
+    dispatch(addComment(data));
   };
 
   const onSubmitReply = async (e) => {
@@ -57,10 +57,9 @@ function TextareaCard({ reply }) {
       text: inputText.trim(),
     };
     const data = await addReplyToDB(payload);
-
+    setInputText('');
     batch(() => {
       dispatch(addReply(data));
-      setInputText('');
       dispatch(closeModal());
     });
   };

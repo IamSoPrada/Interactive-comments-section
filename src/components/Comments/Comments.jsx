@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useContext } from 'react';
+import React, { Fragment, useEffect, useContext, useMemo } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { useSelector, useDispatch, batch } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -12,7 +12,6 @@ import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
 import CommentCard from '../Cards/CommentCard';
 import TextareaCard from '../Cards/TextareaCard';
-import EditableCommentCard from '../Cards/EditableCommentCard';
 
 function Comments() {
   let supabaseCommentsSubscription = null;
@@ -24,13 +23,17 @@ function Comments() {
   const { upvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
 
+  const memoizedComments = useMemo(() => comments, [comments]);
+  const memoizedReplies = useMemo(() => replies, [replies]);
+  const memoizedUpvotes = useMemo(() => upvotes, [upvotes]);
+
   function upvotesQuantity(id) {
-    const filteredById = upvotes.filter((obj) => obj.comment_id === id);
+    const filteredById = memoizedUpvotes.filter((obj) => obj.comment_id === id);
     return filteredById.length;
   }
 
   const repliesOnComment = (id) =>
-    replies.filter((reply) => reply.comment_id === id);
+    memoizedReplies.filter((reply) => reply.comment_id === id);
 
   const handleStatus = (status) => {
     switch (status) {
@@ -110,8 +113,8 @@ function Comments() {
       </ModalBackground>
       <PageContainer>
         <TextareaCard />
-        {comments &&
-          comments.map(({ nickname, date, text, id, user_id }) => (
+        {memoizedComments &&
+          memoizedComments.map(({ nickname, date, text, id, user_id }) => (
             <Fragment key={uuidv4()}>
               <CommentCard
                 key={id}

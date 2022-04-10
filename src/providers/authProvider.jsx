@@ -24,12 +24,12 @@ function AuthProvider(props) {
   const setCredentials = (session) => {
     if (!session) return localStorage.clear();
     localStorage.setItem('token', session.access_token);
-    localStorage.setItem('username', session.user.email);
+    localStorage.setItem('username', session.user.email.split('@')[0]);
     localStorage.setItem('user_id', session.user.id);
     localStorage.setItem('isAuthenticated', true);
     setIsAuthenticated(true);
     setToken(session.access_token);
-    setUsername(session.user.email);
+    setUsername(session.user.email.split('@')[0]);
     setUserId(session.user.id);
   };
 

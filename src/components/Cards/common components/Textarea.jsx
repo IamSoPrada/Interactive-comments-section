@@ -17,7 +17,6 @@ function Textarea({ onChange, value }) {
       rows='3'
       cols='20'
       maxLength='300'
-      wrap
     />
   );
 }

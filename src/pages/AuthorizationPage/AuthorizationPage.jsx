@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '../../supabase/supabaseClient';
+import Logo from '../../../images/icon-bolt.svg';
 
 export default function AuthorizationPage() {
   const [loading, setLoading] = useState(false);
@@ -10,9 +11,10 @@ export default function AuthorizationPage() {
 
     try {
       setLoading(true);
-      const { error } = await supabase.auth.signIn({ email });
+      const { user, error } = await supabase.auth.signIn({ email });
+      console.log(user);
       if (error) throw error;
-      alert('Check your email for the login link!');
+      alert('Проверьте ваш email');
     } catch (error) {
       alert(error.error_description || error.message);
     } finally {
@@ -21,17 +23,11 @@ export default function AuthorizationPage() {
   };
 
   return (
-    <section className='w-full min-h-screen px-8 py-16 bg-gray-100 xl:px-8'>
+    <section className='w-full min-h-screen px-8 py-16 bg-purple-800 xl:px-8'>
       <div className='max-w-5xl mx-auto'>
-        <div className='flex flex-col items-center md:flex-row'>
-          <div className='w-full space-y-5 md:w-3/5 md:pr-16'>
-            <p className='font-medium text-blue-500 uppercase'>Проект "Comment section"</p>
-            <h2 className='text-2xl font-extrabold leading-none text-black sm:text-3xl md:text-5xl'>
-              Войти
-            </h2>
-            <p className='text-xl text-gray-600 md:pr-16'>
-              Введите ваш email и получите письмо с MagicLink для входа.
-            </p>
+        <div className='flex flex-col items-center'>
+          <div>
+            <img className='w-full' src={Logo} alt='' />
           </div>
           {loading ? (
             'Проверьте ваш email.'
@@ -40,7 +36,7 @@ export default function AuthorizationPage() {
               onSubmit={handleLogin}
               className='w-full mt-16 md:mt-0 md:w-2/5'
             >
-              <div className='relative z-10 h-auto p-8 py-10 overflow-hidden bg-white border-b-2 border-gray-300 rounded-lg shadow-2xl px-7'>
+              <div className='relative z-10 h-auto p-8 py-10 overflow-hidden   rounded-lg  px-7'>
                 <input
                   onChange={(e) => setEmail(e.target.value)}
                   type='text'
@@ -50,7 +46,7 @@ export default function AuthorizationPage() {
                 />
 
                 <div className='block'>
-                  <button className='w-full px-3 py-4 font-medium text-white bg-blue-600 rounded-lg'>
+                  <button className='w-full px-3 py-4 font-medium text-white bg-purple-600 rounded-lg'>
                     Отправить
                   </button>
                 </div>

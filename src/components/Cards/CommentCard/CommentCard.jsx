@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 import { formatDistanceToNow } from 'date-fns';
 import IconButton from '../common components/IconButton';
 import AuthContext from '../../../contexts/authContext.jsx';
@@ -37,6 +37,7 @@ function CommentCard(props) {
     const data = await addUpvoteOnCommentToDB(payload);
     dispatch(addUpvote(data));
   };
+
   return (
     <CardContainer classes='bg-slate-50'>
       <div className='flex sm:flex-col'>
@@ -44,11 +45,11 @@ function CommentCard(props) {
         <Upvotes>{upvotes}</Upvotes>
         <MinusButton />
       </div>
-      <div className='flex flex-col gap-4 w-full'>
+      <div className='flex flex-col gap-2 w-full'>
         <div className='flex gap-4 justify-between'>
           <div className='flex gap-4 items-center justify-between w-full'>
-            <div className='flex gap-4 items-center w-full'>
-              <Avatar avatar={avatarNicole} classes='w-12 h-12' />
+            <div className='flex gap-2 items-center '>
+              <Avatar avatar={avatarNicole} classes='w-10 h-10' />
               <Author>{nickname}</Author>
               {currentUserId === userId && <Tag>you</Tag>}
             </div>
@@ -58,7 +59,7 @@ function CommentCard(props) {
           <ReplyButton comment_id={comment_id || id} />
         </div>
         <CardText>{text}</CardText>
-        <div className='absolute bottom-4 left-36 md:relative md:left-0 md:bottom-0 sm:flex gap-2 justify-between '>
+        <div className='absolute bottom-4 left-32 sm:relative sm:bottom-0 sm:left-0 flex justify-between'>
           <IconButton classes='hidden sm:block'>
             <img className='w-6 h-6 relative left-2' src={RepliesIcon} alt='' />
           </IconButton>
