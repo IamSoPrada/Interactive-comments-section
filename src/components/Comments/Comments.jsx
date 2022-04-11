@@ -14,21 +14,34 @@ import CommentCard from '../Cards/CommentCard';
 import TextareaCard from '../Cards/TextareaCard';
 
 function Comments() {
+  const dispatch = useDispatch();
+
   let supabaseCommentsSubscription = null;
   let supabaseRepliesSubscription = null;
-  let supabaseUpvotesSubscription = null;
-  const dispatch = useDispatch();
+  let supabaseCommentsUpvotesSubscription = null;
+  let supabaseRepliesUpvotesSubscription = null;
+
   const currentUserId = useContext(AuthContext).user_id;
   const { comments, status } = useSelector(({ commentsInfo }) => commentsInfo);
-  const { upvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
+  const { commentsUpvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
+  const { repliesUpvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
 
   const memoizedComments = useMemo(() => comments, [comments]);
   const memoizedReplies = useMemo(() => replies, [replies]);
-  const memoizedUpvotes = useMemo(() => upvotes, [upvotes]);
+  const memoizedCommentsUpvotes = useMemo(
+    () => commentsUpvotes,
+    [commentsUpvotes]
+  );
+  const memoizedRepliesUpvotes = useMemo(
+    () => repliesUpvotes,
+    [repliesUpvotes]
+  );
 
-  function upvotesQuantity(id) {
-    const filteredById = memoizedUpvotes.filter((obj) => obj.comment_id === id);
+  function upvotesQuantity(upvotes, id) {
+    const filteredById = upvotes.filter((obj) =>
+      obj.comment_id ? obj.comment_id === id : obj.reply_id === id
+    );
     return filteredById.length;
   }
 
@@ -86,8 +99,22 @@ function Comments() {
         }
       })
       .subscribe();
-    supabaseUpvotesSubscription = supabase
-      .from('upvotes')
+    supabaseCommentsUpvotesSubscription = supabase
+      .from('comments_upvotes')
+      .on('*', (payload) => {
+        switch (payload.eventType) {
+          case 'INSERT':
+            if (currentUserId !== payload.new.user_id) {
+              return dispatch(addUpvote(payload.new));
+            }
+            return null;
+          default:
+            return null;
+        }
+      })
+      .subscribe();
+    supabaseRepliesUpvotesSubscription = supabase
+      .from('replies_upvotes')
       .on('*', (payload) => {
         switch (payload.eventType) {
           case 'INSERT':
@@ -103,6 +130,8 @@ function Comments() {
     return () => {
       supabase.removeSubscription(supabaseCommentsSubscription);
       supabase.removeSubscription(supabaseRepliesSubscription);
+      supabase.removeSubscription(supabaseCommentsUpvotesSubscription);
+      supabase.removeSubscription(supabaseRepliesUpvotesSubscription);
     };
   }, [status]);
 
@@ -119,7 +148,11 @@ function Comments() {
               <CommentCard
                 key={id}
                 id={id}
-                upvotes={upvotesQuantity(id) ? upvotesQuantity(id) : 0}
+                upvotes={
+                  upvotesQuantity(memoizedCommentsUpvotes, id)
+                    ? upvotesQuantity(memoizedCommentsUpvotes, id)
+                    : 0
+                }
                 nickname={nickname}
                 date={date}
                 text={text}
@@ -135,20 +168,17 @@ function Comments() {
                         id={reply.id}
                         comment_id={reply.comment_id}
                         upvotes={
-                          upvotesQuantity(reply.id)
-                            ? upvotesQuantity(reply.id)
+                          upvotesQuantity(memoizedRepliesUpvotes, reply.id)
+                            ? upvotesQuantity(memoizedRepliesUpvotes, reply.id)
                             : 0
                         }
-                        nickname={nickname}
+                        nickname={reply.nickname}
                         date={reply.date}
                         userId={reply.user_id}
                         text={reply.text}
                       />
                     </Fragment>
                   ))}
-
-                  {/* <TextareaCard /> */}
-                  {/* <EditableCommentCard /> */}
                 </ReplyContainer>
               )}
             </Fragment>

@@ -21,6 +21,7 @@ const addCommentToDB = async (comment) => {
   const { data, error } = await supabase.from('comments').insert({
     ...comment,
   });
+  console.log(data, error);
   return data[0];
 };
 

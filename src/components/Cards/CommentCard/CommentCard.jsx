@@ -31,6 +31,7 @@ function CommentCard(props) {
   });
   const addUpvoteToDB = async () => {
     const payload = {
+      type: comment_id ? 'reply' : 'comment',
       user_id: currentUserId,
       id,
     };

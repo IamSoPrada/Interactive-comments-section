@@ -5,7 +5,12 @@ export const getUpvotes = createAsyncThunk(
   'upvotesInfo/setInitialState',
   async () => {
     try {
-      const { data, error } = await supabase.from('upvotes').select();
+      const commentsUpvotes = await supabase.from('comments_upvotes').select();
+      const repliesUpvotes = await supabase.from('replies_upvotes').select();
+      const data = {
+        commentsUpvotes,
+        repliesUpvotes,
+      };
       return data;
     } catch ({ message }) {
       throw new Error('Упс.. Что-то пошло не так.');
@@ -16,7 +21,8 @@ export const getUpvotes = createAsyncThunk(
 const initialState = {
   status: 'idle',
   error: null,
-  upvotes: [],
+  commentsUpvotes: [],
+  repliesUpvotes: [],
 };
 
 const upvotesSlice = createSlice({
@@ -25,7 +31,11 @@ const upvotesSlice = createSlice({
 
   reducers: {
     addUpvote: (state, { payload }) => {
-      state.upvotes.push(payload);
+      if (payload.comment_id) {
+        state.commentsUpvotes.push(payload);
+      } else {
+        state.repliesUpvotes.push(payload);
+      }
     },
     removeUpvote: (state) => {
       state.value -= 1;
@@ -38,7 +48,8 @@ const upvotesSlice = createSlice({
         state.error = null;
       })
       .addCase(getUpvotes.fulfilled, (state, { payload }) => {
-        state.upvotes = payload;
+        state.commentsUpvotes = payload.commentsUpvotes.data;
+        state.repliesUpvotes = payload.repliesUpvotes.data;
         state.status = 'success';
         state.error = null;
       })

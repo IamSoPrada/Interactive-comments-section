@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import AuthContext from '../../../contexts/authContext.jsx';
 import IconButton from '../common components/IconButton';
 import { addCommentToDB } from '../../../supabase/comments';
-import { addCommentUpvoteRowToDB } from '../../../supabase/upvotes';
 import { addReplyToDB } from '../../../supabase/replies';
 import { addComment } from '../../../slices/commentsSlice';
 import { addReply } from '../../../slices/repliesSlice';
