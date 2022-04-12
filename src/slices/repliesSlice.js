@@ -5,10 +5,8 @@ export const getReplies = createAsyncThunk(
   'repliesInfo/setInitialState',
   async () => {
     try {
-      const { data, error } = await supabase
-        .from('replies')
-        .select()
-        
+      const { data, error } = await supabase.from('replies').select();
+
       return data;
     } catch ({ message }) {
       throw new Error('Упс.. Что-то пошло не так.');
@@ -30,8 +28,8 @@ const repliesSlice = createSlice({
     addReply: (state, { payload }) => {
       state.replies.push(payload);
     },
-    removeReply: (state) => {
-      state.value -= 1;
+    removeReply: (state, { payload }) => {
+      state.replies = state.replies.filter((reply) => reply.id !== payload.id);
     },
     editReply: (state, action) => {
       state.value += action.payload;

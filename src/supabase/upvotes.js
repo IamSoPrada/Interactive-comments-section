@@ -26,4 +26,19 @@ const addUpvoteOnCommentToDB = async (comment) => {
   }
 };
 
-export { addCommentUpvoteRowToDB, addUpvoteOnCommentToDB };
+const removeUpvoteOnCommentToDB = async (comment) => {
+  if (comment.type === 'comment') {
+    const { data, error } = await supabase
+      .from('comments_upvotes')
+      .delete()
+      .eq('id', comment.id);
+  }
+  if (comment.type === 'reply') {
+    const { data, error } = await supabase
+      .from('replies_upvotes')
+      .delete()
+      .eq('id', comment.id);
+  }
+};
+
+export { removeUpvoteOnCommentToDB, addUpvoteOnCommentToDB };

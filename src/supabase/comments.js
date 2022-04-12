@@ -21,8 +21,22 @@ const addCommentToDB = async (comment) => {
   const { data, error } = await supabase.from('comments').insert({
     ...comment,
   });
-  console.log(data, error);
   return data[0];
 };
 
-export { addCommentToDB };
+const removeCommentFromDB = async (comment) => {
+  if (comment.type === 'comment') {
+    const { data, error } = await supabase
+      .from('comments')
+      .delete()
+      .eq('id', comment.id);
+  }
+  if (comment.type === 'reply') {
+    const { data, error } = await supabase
+      .from('replies')
+      .delete()
+      .eq('id', comment.id);
+  }
+};
+
+export { removeCommentFromDB, addCommentToDB };

@@ -5,11 +5,9 @@ function ActionButton({ children, classes, onClick }) {
     <button
       onClick={onClick}
       type='button'
-      className={`${
-        classes && classes
-      } bg-purple-800 block max-w-max text-gray-50 rounded-full px-6 py-3 md:px-3 md:py-3 font-bold uppercase text-center`}
+      className={`${classes} text-gray-50 border-gray-100 text-center`}
     >
-      <span className='text-xs md:text-lg'>{children}</span>
+      <span className='text-xs md:text-md text-purple-800'>{children}</span>
     </button>
   );
 }

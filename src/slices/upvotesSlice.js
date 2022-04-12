@@ -37,8 +37,16 @@ const upvotesSlice = createSlice({
         state.repliesUpvotes.push(payload);
       }
     },
-    removeUpvote: (state) => {
-      state.value -= 1;
+    removeUpvote: (state, { payload }) => {
+      if (payload.type === 'comment') {
+        state.commentsUpvotes = state.commentsUpvotes.filter(
+          (upvote) => upvote.id !== payload.id
+        );
+      } else {
+        state.repliesUpvotes = state.repliesUpvotes.filter(
+          (upvote) => upvote.id !== payload.id
+        );
+      }
     },
   },
   extraReducers: (builder) => {

@@ -4,9 +4,13 @@ import { useSelector, useDispatch, batch } from 'react-redux';
 import { toast } from 'react-toastify';
 import AuthContext from '../../contexts/authContext.jsx';
 import { supabase } from '../../supabase/supabaseClient';
-import { getComments, addComment } from '../../slices/commentsSlice';
-import { getReplies, addReply } from '../../slices/repliesSlice';
-import { addUpvote, getUpvotes } from '../../slices/upvotesSlice';
+import {
+  getComments,
+  addComment,
+  removeComment,
+} from '../../slices/commentsSlice';
+import { getReplies, addReply, removeReply } from '../../slices/repliesSlice';
+import { addUpvote, getUpvotes, removeUpvote } from '../../slices/upvotesSlice';
 import ModalBackground from '../Modals/ModalBackground';
 import PageContainer from '../PageContainer';
 import ReplyContainer from '../ReplyContainer';
@@ -16,15 +20,11 @@ import TextareaCard from '../Cards/TextareaCard';
 function Comments() {
   const dispatch = useDispatch();
 
-  let supabaseCommentsSubscription = null;
-  let supabaseRepliesSubscription = null;
-  let supabaseCommentsUpvotesSubscription = null;
-  let supabaseRepliesUpvotesSubscription = null;
-
   const currentUserId = useContext(AuthContext).user_id;
   const { comments, status } = useSelector(({ commentsInfo }) => commentsInfo);
-  const { commentsUpvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
-  const { repliesUpvotes } = useSelector(({ upvotesInfo }) => upvotesInfo);
+  const { commentsUpvotes, repliesUpvotes } = useSelector(
+    ({ upvotesInfo }) => upvotesInfo
+  );
   const { replies } = useSelector(({ repliesInfo }) => repliesInfo);
 
   const memoizedComments = useMemo(() => comments, [comments]);
@@ -70,60 +70,80 @@ function Comments() {
   };
 
   useEffect(() => {
+    let supabaseCommentsSubscription = null;
+    let supabaseRepliesSubscription = null;
+    let supabaseCommentsUpvotesSubscription = null;
+    let supabaseRepliesUpvotesSubscription = null;
     handleStatus(status);
     supabaseCommentsSubscription = supabase
       .from('comments')
-      .on('*', (payload) => {
-        switch (payload.eventType) {
-          case 'INSERT':
-            if (currentUserId !== payload.new.user_id) {
-              return dispatch(addComment(payload.new));
-            }
-            return null;
-          default:
-            return null;
+      .on('INSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addComment(payload.new));
+        }
+      })
+      .on('UPSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addComment(payload.new));
+        }
+      })
+      .on('DELETE', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(removeComment(payload.old));
         }
       })
       .subscribe();
     supabaseRepliesSubscription = supabase
       .from('replies')
-      .on('*', (payload) => {
-        switch (payload.eventType) {
-          case 'INSERT':
-            if (currentUserId !== payload.new.user_id) {
-              return dispatch(addReply(payload.new));
-            }
-            return null;
-          default:
-            return null;
+      .on('INSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addReply(payload.new));
+        }
+      })
+      .on('UPSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addComment(payload.new));
+        }
+      })
+      .on('DELETE', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(removeReply(payload.old));
         }
       })
       .subscribe();
     supabaseCommentsUpvotesSubscription = supabase
       .from('comments_upvotes')
-      .on('*', (payload) => {
-        switch (payload.eventType) {
-          case 'INSERT':
-            if (currentUserId !== payload.new.user_id) {
-              return dispatch(addUpvote(payload.new));
-            }
-            return null;
-          default:
-            return null;
+      .on('INSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addUpvote(payload.new));
+        }
+      })
+      .on('UPSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addComment(payload.new));
+        }
+      })
+      .on('DELETE', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(removeUpvote(payload.old));
         }
       })
       .subscribe();
     supabaseRepliesUpvotesSubscription = supabase
       .from('replies_upvotes')
-      .on('*', (payload) => {
-        switch (payload.eventType) {
-          case 'INSERT':
-            if (currentUserId !== payload.new.user_id) {
-              return dispatch(addUpvote(payload.new));
-            }
-            return null;
-          default:
-            return null;
+      .on('INSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addUpvote(payload.new));
+        }
+      })
+      .on('UPSERT', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(addComment(payload.new));
+        }
+      })
+      .on('DELETE', (payload) => {
+        if (currentUserId !== payload.new.user_id) {
+          return dispatch(removeUpvote(payload.new));
         }
       })
       .subscribe();
@@ -134,6 +154,7 @@ function Comments() {
       supabase.removeSubscription(supabaseRepliesUpvotesSubscription);
     };
   }, [status]);
+  useEffect(() => {}, [comments, commentsUpvotes, repliesUpvotes, replies]);
 
   return (
     <div className='relative bg-slate-100 mx-auto py-4'>

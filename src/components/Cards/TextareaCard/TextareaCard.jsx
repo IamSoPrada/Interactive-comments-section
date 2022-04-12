@@ -75,12 +75,12 @@ function TextareaCard({ reply }) {
           <Textarea onChange={handleChangeInput} value={inputText} />
           <ActionButton
             onClick={reply ? onSubmitReply : onSubmitComment}
-            classes='hidden sm:block'
+            classes='hidden rounded-full bg-purple-800  sm:block px-6 py-3 md:px-3 md:py-3'
           >
             <svg
               className='w-6 h-6'
               fill='none'
-              stroke='currentColor'
+              stroke='#fff'
               viewBox='0 0 24 24'
               xmlns='http://www.w3.org/2000/svg'
             >
@@ -106,11 +106,14 @@ function TextareaCard({ reply }) {
         </div>
         <div className='flex w-full gap-4 justify-between sm:hidden'>
           <Avatar avatar={avatarNicole} classes='w-12 h-12' alt='' />
-          <ActionButton onClick={reply ? onSubmitReply : onSubmitComment}>
+          <ActionButton
+            classes='bg-purple-800 px-6 py-3 md:px-3 md:py-3 rounded-full'
+            onClick={reply ? onSubmitReply : onSubmitComment}
+          >
             <svg
               className='w-6 h-6'
               fill='none'
-              stroke='currentColor'
+              stroke='#fff'
               viewBox='0 0 24 24'
               xmlns='http://www.w3.org/2000/svg'
             >
