@@ -64,7 +64,7 @@ function TextareaCard({ reply }) {
   };
 
   return (
-    <CardContainer classes='z-60 bg-slate-50'>
+    <CardContainer classes='bg-slate-50'>
       <div className='flex w-full flex-col gap-4 justify-between items-start'>
         <div className='flex w-full flex-row gap-4 justify-between items-start'>
           <Avatar

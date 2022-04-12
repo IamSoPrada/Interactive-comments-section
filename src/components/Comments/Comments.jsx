@@ -157,7 +157,7 @@ function Comments() {
   useEffect(() => {}, [comments, commentsUpvotes, repliesUpvotes, replies]);
 
   return (
-    <div className='relative bg-slate-100 mx-auto py-4'>
+    <div className='min-h-screen  relative bg-slate-100 mx-auto py-4'>
       <ModalBackground>
         <TextareaCard reply />
       </ModalBackground>
