@@ -24,6 +24,14 @@ const addCommentToDB = async (comment) => {
   return data[0];
 };
 
+const updateCommentInDB = async (comment, id) => {
+  const { data, error } = await supabase
+    .from('comments')
+    .update({ text: comment.text })
+    .match({ id });
+  return data[0];
+};
+
 const removeCommentFromDB = async (comment) => {
   if (comment.type === 'comment') {
     const { data, error } = await supabase
@@ -39,4 +47,4 @@ const removeCommentFromDB = async (comment) => {
   }
 };
 
-export { removeCommentFromDB, addCommentToDB };
+export { removeCommentFromDB, addCommentToDB, updateCommentInDB };

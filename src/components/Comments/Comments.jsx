@@ -7,9 +7,15 @@ import { supabase } from '../../supabase/supabaseClient';
 import {
   getComments,
   addComment,
+  editComment,
   removeComment,
 } from '../../slices/commentsSlice';
-import { getReplies, addReply, removeReply } from '../../slices/repliesSlice';
+import {
+  getReplies,
+  addReply,
+  editReply,
+  removeReply,
+} from '../../slices/repliesSlice';
 import { addUpvote, getUpvotes, removeUpvote } from '../../slices/upvotesSlice';
 import ModalBackground from '../Modals/ModalBackground';
 import PageContainer from '../PageContainer';
@@ -82,9 +88,9 @@ function Comments() {
           return dispatch(addComment(payload.new));
         }
       })
-      .on('UPSERT', (payload) => {
+      .on('UPDATE', (payload) => {
         if (currentUserId !== payload.new.user_id) {
-          return dispatch(addComment(payload.new));
+          return dispatch(editComment(payload.new));
         }
       })
       .on('DELETE', (payload) => {
@@ -100,9 +106,9 @@ function Comments() {
           return dispatch(addReply(payload.new));
         }
       })
-      .on('UPSERT', (payload) => {
+      .on('UPDATE', (payload) => {
         if (currentUserId !== payload.new.user_id) {
-          return dispatch(addComment(payload.new));
+          return dispatch(editReply(payload.new));
         }
       })
       .on('DELETE', (payload) => {
@@ -118,14 +124,13 @@ function Comments() {
           return dispatch(addUpvote(payload.new));
         }
       })
-      .on('UPSERT', (payload) => {
-        if (currentUserId !== payload.new.user_id) {
-          return dispatch(addComment(payload.new));
-        }
-      })
       .on('DELETE', (payload) => {
+        const payloadWithUpvoteType = {
+          type: payload.table === 'comments_upvotes' ? 'comment' : 'reply',
+          id: payload.old.id,
+        };
         if (currentUserId !== payload.new.user_id) {
-          return dispatch(removeUpvote(payload.old));
+          return dispatch(removeUpvote(payloadWithUpvoteType));
         }
       })
       .subscribe();
@@ -136,11 +141,7 @@ function Comments() {
           return dispatch(addUpvote(payload.new));
         }
       })
-      .on('UPSERT', (payload) => {
-        if (currentUserId !== payload.new.user_id) {
-          return dispatch(addComment(payload.new));
-        }
-      })
+
       .on('DELETE', (payload) => {
         if (currentUserId !== payload.new.user_id) {
           return dispatch(removeUpvote(payload.new));

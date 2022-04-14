@@ -9,6 +9,7 @@ import CardText from '../common components/CardText';
 import Author from '../common components/Author';
 import Avatar from '../common components/Avatar';
 import Upvotes from '../common components/Upvotes';
+import TextareaCard from '../TextareaCard';
 import PostDate from '../common components/PostDate';
 import ReplyButton from '../common components/ReplyButton';
 import DropDownMenu from '../common components/DropDownMenu';
@@ -31,6 +32,7 @@ import BookmarkIcon from '../../../../images/icon-bookmark.svg';
 
 function CommentCard(props) {
   const [isDropDownOpened, setDropDownOpened] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const { commentsUpvotes, repliesUpvotes } = useSelector(
     ({ upvotesInfo }) => upvotesInfo
   );
@@ -78,8 +80,13 @@ function CommentCard(props) {
     dispatch(removeComment(payload));
   };
 
+  const handleEditComment = () => {
+    setIsEditOpen(!isEditOpen);
+    setDropDownOpened(false);
+  };
+
   return (
-    <CardContainer classes='bg-slate-50'>
+    <CardContainer classes='bg-slate-50 shadow-sm'>
       <div className='flex sm:flex-col'>
         <PlusButton onClick={addUpvoteToDB} />
         <Upvotes>{upvotes}</Upvotes>
@@ -98,7 +105,15 @@ function CommentCard(props) {
           </div>
           <ReplyButton comment_id={comment_id || id} />
         </div>
-        <CardText>{text}</CardText>
+        {isEditOpen || <CardText>{text}</CardText>}
+        {isEditOpen && (
+          <TextareaCard
+            id={id}
+            editMode={isEditOpen}
+            textToEdit={text}
+            reply={comment_id && true}
+          />
+        )}
         <div className='absolute bottom-4 left-32 sm:relative sm:bottom-0 sm:left-0 flex justify-between'>
           <IconButton classes='hidden sm:block'>
             <img className='w-6 h-6 relative left-2' src={RepliesIcon} alt='' />
@@ -126,14 +141,17 @@ function CommentCard(props) {
             </IconButton>
           )}
           {isDropDownOpened && (
-            <DropDownMenu classes='z-30 p-2 absolute -right-32 bg-slate-200 rounded-md'>
+            <DropDownMenu classes='z-30 p-2 absolute -right-28 md:-right-32 bg-slate-50 rounded-md shadow-sm'>
               <div className='flex flex-col gap-2 w-20'>
-                <ActionButton classes='block w-full hover:bg-slate-300  rounded-md'>
+                <ActionButton
+                  onClick={handleEditComment}
+                  classes='block w-full hover:bg-slate-200  rounded-md'
+                >
                   Edit
                 </ActionButton>
                 <ActionButton
                   onClick={handleRemoveComment}
-                  classes='hover:bg-slate-300 px-6 rounded-md w-full'
+                  classes='hover:bg-slate-200 px-6 rounded-md w-full'
                 >
                   Delete
                 </ActionButton>

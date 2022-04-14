@@ -8,4 +8,12 @@ const addReplyToDB = async (reply) => {
   return data[0];
 };
 
-export { addReplyToDB };
+const updateReplyInDB = async (reply, id) => {
+  const { data, error } = await supabase
+    .from('replies')
+    .update({ text: reply.text })
+    .match({ id });
+  return data[0];
+};
+
+export { addReplyToDB, updateReplyInDB };

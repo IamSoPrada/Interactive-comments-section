@@ -31,8 +31,10 @@ const repliesSlice = createSlice({
     removeReply: (state, { payload }) => {
       state.replies = state.replies.filter((reply) => reply.id !== payload.id);
     },
-    editReply: (state, action) => {
-      state.value += action.payload;
+    editReply: (state, { payload }) => {
+      state.replies = state.replies.map((reply) =>
+        reply.id === payload.id ? payload : reply
+      );
     },
   },
   extraReducers: (builder) => {

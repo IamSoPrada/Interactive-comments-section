@@ -1,12 +1,12 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useDispatch, useSelector, batch } from 'react-redux';
 import { v4 as uuidv4 } from 'uuid';
 import AuthContext from '../../../contexts/authContext.jsx';
 import IconButton from '../common components/IconButton';
-import { addCommentToDB } from '../../../supabase/comments';
-import { addReplyToDB } from '../../../supabase/replies';
-import { addComment } from '../../../slices/commentsSlice';
-import { addReply } from '../../../slices/repliesSlice';
+import { addCommentToDB, updateCommentInDB } from '../../../supabase/comments';
+import { addReplyToDB, updateReplyInDB } from '../../../supabase/replies';
+import { addComment, editComment } from '../../../slices/commentsSlice';
+import { addReply, editReply } from '../../../slices/repliesSlice';
 import { closeModal } from '../../../slices/modalSlice';
 import Textarea from '../common components/Textarea';
 import ActionButton from '../common components/ActionButton';
@@ -18,7 +18,7 @@ import IconImage from '../../../../images/icon-image.svg';
 import IconMention from '../../../../images/icon-mention.svg';
 import IconSmile from '../../../../images/icon-smile.svg';
 
-function TextareaCard({ reply }) {
+function TextareaCard({ reply, editMode, textToEdit, id }) {
   const dispatch = useDispatch();
   const { user_id, username } = useContext(AuthContext);
   const comment_id = useSelector(({ modalInfo }) => modalInfo.comment_id);
@@ -30,7 +30,11 @@ function TextareaCard({ reply }) {
 
     setInputText(value);
   };
-
+  useEffect(() => {
+    if (editMode) {
+      setInputText(textToEdit);
+    }
+  }, [editMode]);
   const onSubmitComment = async (e) => {
     e.preventDefault();
     const payload = {
@@ -40,9 +44,14 @@ function TextareaCard({ reply }) {
       nickname: username,
       text: inputText.trim(),
     };
-    const data = await addCommentToDB(payload);
-    setInputText('');
-    dispatch(addComment(data));
+    if (!editMode) {
+      const data = await addCommentToDB(payload);
+      dispatch(addComment(data));
+      setInputText('');
+    } else {
+      const data = await updateCommentInDB(payload, id);
+      dispatch(editComment(data));
+    }
   };
 
   const onSubmitReply = async (e) => {
@@ -55,23 +64,29 @@ function TextareaCard({ reply }) {
       nickname: username,
       text: inputText.trim(),
     };
-    const data = await addReplyToDB(payload);
-    setInputText('');
-    batch(() => {
-      dispatch(addReply(data));
-      dispatch(closeModal());
-    });
+    if (!editMode) {
+      const data = await addReplyToDB(payload);
+      batch(() => {
+        dispatch(addReply(data));
+        dispatch(closeModal());
+      });
+      setInputText('');
+    } else {
+      const data = await updateReplyInDB(payload, id);
+      dispatch(editReply(data));
+    }
   };
-
   return (
-    <CardContainer classes='bg-slate-50'>
+    <CardContainer classes={`bg-slate-50 ${editMode || 'shadow-sm'}`}>
       <div className='flex w-full flex-col gap-4 justify-between items-start'>
         <div className='flex w-full flex-row gap-4 justify-between items-start'>
-          <Avatar
-            avatar={avatarNicole}
-            classes='hidden sm:block w-14 h-10'
-            alt=''
-          />
+          {editMode || (
+            <Avatar
+              avatar={avatarNicole}
+              classes='hidden sm:block w-14 h-10'
+              alt=''
+            />
+          )}
           <Textarea onChange={handleChangeInput} value={inputText} />
           <ActionButton
             onClick={reply ? onSubmitReply : onSubmitComment}
@@ -104,8 +119,14 @@ function TextareaCard({ reply }) {
             <img className='w-6 h-6 relative left-2' src={IconMention} alt='' />
           </IconButton>
         </div>
-        <div className='flex w-full gap-4 justify-between sm:hidden'>
-          <Avatar avatar={avatarNicole} classes='w-12 h-12' alt='' />
+        <div
+          className={`${
+            editMode && 'absolute bottom-2 right-4 flex-row-reverse'
+          } flex  w-full gap-4 justify-between sm:hidden`}
+        >
+          {editMode || (
+            <Avatar avatar={avatarNicole} classes='w-12 h-12' alt='' />
+          )}
           <ActionButton
             classes='bg-purple-800 px-6 py-3 md:px-3 md:py-3 rounded-full'
             onClick={reply ? onSubmitReply : onSubmitComment}
