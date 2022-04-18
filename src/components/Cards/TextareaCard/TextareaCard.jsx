@@ -68,16 +68,18 @@ function TextareaCard({ reply, editMode, textToEdit, id }) {
       const data = await addReplyToDB(payload);
       batch(() => {
         dispatch(addReply(data));
+        setInputText('');
         dispatch(closeModal());
       });
-      setInputText('');
     } else {
       const data = await updateReplyInDB(payload, id);
       dispatch(editReply(data));
     }
   };
   return (
-    <CardContainer classes={`bg-slate-50 ${editMode || 'shadow-sm'}`}>
+    <CardContainer
+      classes={`bg-slate-50 ${editMode || 'shadow-sm'} ${editMode && 'p-0'}`}
+    >
       <div className='flex w-full flex-col gap-4 justify-between items-start'>
         <div className='flex w-full flex-row gap-4 justify-between items-start'>
           {editMode || (
@@ -108,7 +110,7 @@ function TextareaCard({ reply, editMode, textToEdit, id }) {
             </svg>
           </ActionButton>
         </div>
-        <div className='md:flex gap-6 md:relative left-12'>
+        <div className={`md:flex gap-10 md:relative ${editMode || 'left-16'} `}>
           <IconButton>
             <img className='w-6 h-6 relative left-2' src={IconSmile} alt='' />
           </IconButton>
@@ -121,7 +123,7 @@ function TextareaCard({ reply, editMode, textToEdit, id }) {
         </div>
         <div
           className={`${
-            editMode && 'absolute bottom-2 right-4 flex-row-reverse'
+            editMode && 'absolute bottom-0 right-0 w-fit '
           } flex  w-full gap-4 justify-between sm:hidden`}
         >
           {editMode || (

@@ -154,11 +154,11 @@ function Comments() {
       supabase.removeSubscription(supabaseCommentsUpvotesSubscription);
       supabase.removeSubscription(supabaseRepliesUpvotesSubscription);
     };
-  }, [status]);
+  }, []);
   useEffect(() => {}, [comments, commentsUpvotes, repliesUpvotes, replies]);
 
   return (
-    <div className='min-h-screen  relative bg-slate-100 mx-auto py-4'>
+    <div className='min-h-screen relative bg-slate-100 mx-auto py-4'>
       <ModalBackground>
         <TextareaCard reply />
       </ModalBackground>

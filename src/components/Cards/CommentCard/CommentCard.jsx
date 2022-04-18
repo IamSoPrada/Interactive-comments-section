@@ -114,7 +114,7 @@ function CommentCard(props) {
             reply={comment_id && true}
           />
         )}
-        <div className='absolute bottom-4 left-32 sm:relative sm:bottom-0 sm:left-0 flex justify-between'>
+        <div className='absolute bottom-4 left-32 sm:relative sm:bottom-0 sm:left-0 flex gap-12 md:justify-between'>
           <IconButton classes='hidden sm:block'>
             <img className='w-6 h-6 relative left-2' src={RepliesIcon} alt='' />
           </IconButton>
