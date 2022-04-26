@@ -27,6 +27,8 @@ Users should be able to:
 - [React](https://reactjs.org/) - JS library
 - [Tailwind CSS](https://tailwindcss.com/) - For styles
 
+![image](https://user-images.githubusercontent.com/64264723/165401637-b2b30c02-94c2-4527-bb14-0f381bc67f6b.png)
+
 ## Author
 
 - Frontend Mentor - [@IamSoPrada](https://www.frontendmentor.io/profile/IamSoPrada)
